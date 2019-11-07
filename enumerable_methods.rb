@@ -1,76 +1,91 @@
 # frozen_string_literal: true
 
-module Enumerable
+module Enumerable #rubocop:disable Metrics/ModuleLength
   # my_each
   def my_each
-    if block_given?
+    return self.to_enum if !block_given?
       i = 0
       while i < size
         yield(self[i])
         i += 1
       end
-      self
-    end
-    to_enum
+    self
   end
 
   # my_each_with_index
   def my_each_with_index
-    if block_given?
-      i = 0
-      while i < size
-        yield(self[i], i)
-        i += 1
-      end
-      self
+    return self.to_enum if !block_given?
+    i = 0
+    while i < size
+      yield(self[i], i)
+      i += 1
     end
-    to_enum
+    self
   end
 
   # my_select
   def my_select
-    if block_given?
-      arr = []
-      my_each do |a|
-        arr.push(a) if yield(a)
-      end
-      arr
+    return self.to_enum if !block_given?
+    arr = []
+    my_each do |a|
+      arr.push(a) if yield(a)
     end
-    to_enum
+    return arr
   end
 
   # my_all
-  def my_all?
+  def my_all?(arg = nil)
     if block_given?
-      i = 0
-      while i < size
-        return false unless yield(self[i])
-
-        i += 1
-      end
-      true
+      my_each {|a| return false unless yield(a)}
+      return true
     end
-    to_enum
+    if arg.class == Regexp
+      my_each {|a| return false unless a.match(arg)}
+      return true
+    elsif arg.class == Class
+      my_each {|a| return false unless a.class == arg || a.class.superclass == arg}
+      return true
+    elsif arg == nil && !block_given? && self.size != 0
+      return false
+    end
+    return true
   end
 
+
   # my_any
-  def my_any?
+  def my_any?(arg = nil)
     if block_given?
-      result = false
-      my_each { |a| result = true if yield(a) }
-      return result
+      my_each {|a| return true if yield(a)}
+      return false
     end
-    to_enum
+    if arg.class == Regexp
+      my_each {|a| return true if a.match(arg)}
+      return false
+    elsif arg.class == Class
+      my_each {|a| return true if a.class == arg || a.class.superclass == arg}
+      return false
+    elsif arg == nil && !block_given? && self.size != 0
+      return true
+    end
+    return false
   end
 
   # my_none
-  def my_none?
+  def my_none?(arg = nil)
     if block_given?
-      result = false
-      my_each { |a| result = true unless yield(a) }
-      return result
+      my_each {|a| return false unless !yield(a)}
+      return true
     end
-    to_enum
+    if arg.class == Regexp
+      my_each {|a| return false unless !a.match(arg)}
+      return true
+    elsif arg.class == Class
+      my_each {|a| return false unless !a.class == arg || !a.class.superclass == arg}
+      return true
+    elsif arg == nil && !block_given? && self.size != 0
+      return true
+    end
+    return true
   end
 
   # my_count
@@ -88,38 +103,69 @@ module Enumerable
 
   # my_map
   def my_map
-    if block_given?
-      arr = []
-      to_a.my_each { |a| arr.push(yield(a)) }
-      return arr
-    end
-    to_enum
+    return self.to_enum if !block_given?
+    arr = []
+    to_a.my_each { |a| arr.push(yield(a)) }
+    return arr
   end
 
   # my_inject
-  def my_inject(*args)
-    acumulator = !args.empty? ? args[0] : to_a[0]
-    to_a.drop(!args.empty? ? 0 : 1).my_each { |a| acumulator = yield(acumulator, a) }
-    acumulator
+  def my_inject(accumulator = nil, operation = nil, &block)
+    if operation.nil? && block.nil?
+      operation = accumulator
+      accumulator = nil
+    end
+
+    block = case operation
+    when Symbol
+      lambda { |acc, value| acc.send(operation, value) }
+    when nil
+      block
+    end
+
+    if accumulator.nil?
+      ignore_first = true
+      accumulator = first
+    end
+
+    index = 0
+
+    each do |element|
+      unless ignore_first && index == 0
+        accumulator = block.call(accumulator, element)
+      end
+      index += 1
+    end
+    accumulator
   end
+  # def my_inject(symbol = nil, *args)
+  #   acumulator = 0
+  #   if block_given?
+  #     acumulator = !args.empty? ? args[0] : to_a[0]
+  #     to_a.drop(!args.empty? ? 0 : 1).my_each { |a| acumulator = yield(acumulator, a) }
+  #     acumulator
+  #   elsif symbol.class == Symbol
+  #     # puts "I'm here"
+  #     # puts 1.send(:+ , 2)
+  #     to_a.my_each { |a| acumulator.send(symbol,a)}
+  #     # acumulator
+  #   end
+  # end
 
   # my_map with proc
-  def my_map_proc(block)
+  def my_map_proc(&block)
     arr = []
     to_a.my_each { |a| arr.push(block.call(a)) }
     arr
   end
 
   # my_map with block and proc
-  def my_map_proc_bloc(block = nil)
+  def my_map_proc_bloc(&block)
     arr = []
-    if block
-      to_a.my_each { |a| arr.push(block.call(a)) }
-    else
-      to_a.my_each { |a| arr.push(yield(a)) }
-    end
+    to_a.my_each { |a| arr.push(block.call(a))}
     arr
   end
+
 end
 
 # multiply_els
@@ -127,21 +173,7 @@ def multiply_els(arr)
   arr.my_inject { |acum, i| acum * i }
 end
 
-# [1,33,5,7,2,4,6].my_each {|a| puts a * 2}
-# print "------------------------- \n"
-# [1,33,5,7,2,4,6].my_each_with_index {|a, i| puts "number #{a} and index #{i}"}
-#
-# puts [1,33,5,7,2,4,6].my_select { |num| num.even? }
-# puts %w[an be cat].none? { |word| word.length >= 4 }
-# [].any?
-# puts [1,2,3,3,2].my_count(6)
-# puts (1..4).my_map {|i| i*i}
-# puts [1,2,3].my_inject(:+)
-# puts (5..10).my_inject(2) { |sum, n| sum + n }
-# longest = %w[ cat sheep bear ].my_inject do |memo, word|
-#    memo.length > word.length ? memo : word
-# end
-# puts longest
-# proc1 = Proc.new {|i| i * 2}
-# puts [1,2,3,4].my_map_proc(proc1)
-# puts multiply_els([2,4,5])
+
+proc = Proc.new{|sum, n| sum + n}
+
+puts (5..10).test(4,:+)
