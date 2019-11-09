@@ -26,7 +26,7 @@ module Enumerable
   # my_select
   def my_select
     return to_enum unless block_given?
-    
+
     arr = []
     my_each do |a|
       arr.push(a) if yield(a)
@@ -35,7 +35,7 @@ module Enumerable
   end
 
   # my_all
-  def my_all?(arg = nil)
+  def my_all?(arg = nil) # rubocop:disable Metrics/CyclomaticComplexity
     if block_given?
       my_each { |a| return false unless yield(a) }
       return true
@@ -53,7 +53,7 @@ module Enumerable
   end
 
   # my_any
-  def my_any?(arg = nil)
+  def my_any?(arg = nil) # rubocop:disable Metrics/CyclomaticComplexity
     if block_given?
       my_each { |a| return true if yield(a) }
       return false
@@ -71,7 +71,7 @@ module Enumerable
   end
 
   # my_none
-  def my_none?(arg = nil)
+  def my_none?(arg = nil) # rubocop:disable Metrics/CyclomaticComplexity
     if block_given?
       my_each { |a| return false if yield(a) }
       return true
@@ -111,7 +111,7 @@ module Enumerable
   end
 
   # my_inject
-  def my_inject(accumulator = nil, operation = nil, &block)
+  def my_inject(accumulator = nil, operation = nil, &block) # rubocop:disable Metrics/CyclomaticComplexity
     if operation.nil? && block.nil?
       operation = accumulator
       accumulator = nil
