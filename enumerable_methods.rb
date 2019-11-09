@@ -35,7 +35,7 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
   end
 
   # my_all
-  def my_all?(arg = nil) 
+  def my_all?(arg = nil) #rubocop:disable Layout/TrailingWhitespace
     if block_given?
       my_each { |a| return false unless yield(a) }
       return true
@@ -111,7 +111,7 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
   end
 
   # my_inject
-  def my_inject(accumulator = nil, operation = nil, &block) # rubocop:disable Metrics/CyclomaticComplexity
+  def my_inject(accumulator = nil, operation = nil, &block)
     if operation.nil? && block.nil?
       operation = accumulator
       accumulator = nil

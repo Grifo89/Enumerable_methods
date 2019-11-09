@@ -29,7 +29,8 @@ Style/Documentation:
   Enabled: false
 Style/ClassAndModuleChildren:
   Enabled: false
-
+Style/MultipleComparison:
+  Enabled: false
 
 Layout/AlignHash:
   EnforcedColonStyle: key
