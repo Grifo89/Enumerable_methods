@@ -35,7 +35,7 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
   end
 
   # my_all
-  def my_all?(arg = nil) #rubocop:disable Layout/TrailingWhitespace
+  def my_all?(arg = nil) # rubocop:disable Layout/TrailingWhitespace
     if block_given?
       my_each { |a| return false unless yield(a) }
       return true
