@@ -3,8 +3,8 @@
 module Enumerable
   # my_each
   def my_each
-
     return to_enum unless block_given?
+
     i = 0
     while i < size
       yield(self[i])
@@ -15,6 +15,7 @@ module Enumerable
   # my_each_with_index
   def my_each_with_index
     return to_enum unless block_given?
+
     i = 0
     while i < size
       yield(self[i], i)
@@ -25,6 +26,7 @@ module Enumerable
   # my_select
   def my_select
     return to_enum unless block_given?
+    
     arr = []
     my_each do |a|
       arr.push(a) if yield(a)
