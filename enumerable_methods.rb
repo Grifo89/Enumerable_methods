@@ -35,7 +35,7 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
   end
 
   # my_all
-  def my_all?(arg = nil) # rubocop:disable Metrics/CyclomaticComplexity
+  def my_all?(arg = nil) 
     if block_given?
       my_each { |a| return false unless yield(a) }
       return true
@@ -53,7 +53,7 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
   end
 
   # my_any
-  def my_any?(arg = nil) # rubocop:disable Metrics/CyclomaticComplexity
+  def my_any?(arg = nil)
     if block_given?
       my_each { |a| return true if yield(a) }
       return false
@@ -71,7 +71,7 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
   end
 
   # my_none
-  def my_none?(arg = nil) # rubocop:disable Metrics/CyclomaticComplexity
+  def my_none?(arg = nil)
     if block_given?
       my_each { |a| return false if yield(a) }
       return true
