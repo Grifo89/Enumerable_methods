@@ -111,7 +111,7 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
   end
 
   # my_inject
-  def my_inject(accumulator = nil, operation = nil, &block)   # rubocop:disable Metrics/CyclomaticComplexity,  Metrics/PerceivedComplexity
+  def my_inject(accumulator = nil, operation = nil, &block) # rubocop:disable Metrics/CyclomaticComplexity
     if operation.nil? && block.nil?
       operation = accumulator
       accumulator = nil
