@@ -5,6 +5,7 @@ AllCops:
     - "config/**/*"
     - "Guardfile"
     - "Rakefile"
+    - 'path/to/excluded/file.rb'
   DisplayCopNames: true
 
 Metrics/LineLength:
