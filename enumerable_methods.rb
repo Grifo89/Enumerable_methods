@@ -80,7 +80,7 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
       my_each { |a| return false if a.match(arg) }
       return true
     elsif arg.class == Class
-      my_each { |a| return false unless !a.class == arg || !a.class.superclass == arg }
+      my_each { |a| return true unless a.class == arg || !a.class.superclass == arg }
       return true
     elsif arg.nil? && !block_given? && !empty?
       return true
@@ -157,3 +157,5 @@ end
 def multiply_els(arr)
   arr.my_inject { |acum, i| acum * i }
 end
+
+puts [1,2,3,4,5].my_none?(String)
