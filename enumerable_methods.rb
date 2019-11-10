@@ -157,5 +157,3 @@ end
 def multiply_els(arr)
   arr.my_inject { |acum, i| acum * i }
 end
-
-puts [1,2,3,4,5].my_none?(String)
