@@ -47,7 +47,7 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
       my_each { |a| return false unless a.class == arg || a.class.superclass == arg }
       return true
     elsif arg.nil? && !block_given? && !empty?
-      my_each{ |a| return false if a == nil || a == false}
+      my_each { |a| return false if a.nil? || a == false }
     elsif (arg.class != Class || arg.class != Regexp) && !arg.nil?
       return false
     end
@@ -67,7 +67,7 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
       my_each { |a| return true if a.class == arg || a.class.superclass == arg }
       return false
     elsif arg.nil? && !block_given? && !empty?
-      my_each { |a| return true unless a == nil || a == false}
+      my_each { |a| return true unless a.nil? || a == false }
     end
     false
   end
@@ -85,9 +85,9 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
       my_each { |a| return false if a.class == arg || a.class.superclass == arg }
       return false
     elsif arg.nil? && !block_given? && !empty?
-      my_each { |a| return true if a == false || a == nil}
+      my_each { |a| return true if a == false || a.nil? }
       return false
-    elsif !arg.nil? 
+    elsif !arg.nil?
       my_each { |a| return false if a == arg }
     end
     true
@@ -163,4 +163,4 @@ def multiply_els(arr)
   arr.my_inject { |acum, i| acum * i }
 end
 
-puts [1,2,'d'].my_none?
+puts [1, 2, 'd'].my_none?
