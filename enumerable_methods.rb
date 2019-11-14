@@ -85,7 +85,6 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
       my_each { |a| return false if a.class == arg || a.class.superclass == arg }
       return true
     elsif arg.nil? && !block_given? && !empty?
-      my_each { |a| return true if a == false || a.nil? }
       return false
     elsif !arg.nil?
       my_each { |a| return false if a == arg }
