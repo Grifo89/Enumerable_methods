@@ -40,7 +40,7 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
       my_each { |a| return false unless yield(a) }
       return true
     end
-    if arg.class == Regexp
+    if arg.class == Regexp || arg.class == String
       my_each { |a| return false unless a.match(arg) }
       return true
     elsif arg.class == Class
@@ -49,7 +49,7 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
     elsif arg.nil? && !block_given? && !empty?
       my_each { |a| return false if a.nil? || a == false }
     elsif (arg.class != Class || arg.class != Regexp) && !arg.nil?
-      return false
+      my_each { |a| return true unless a != arg}
     end
     true
   end
@@ -83,7 +83,7 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
       return true
     elsif arg.class == Class
       my_each { |a| return false if a.class == arg || a.class.superclass == arg }
-      return false
+      return true
     elsif arg.nil? && !block_given? && !empty?
       my_each { |a| return true if a == false || a.nil? }
       return false
