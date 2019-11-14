@@ -49,7 +49,7 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
     elsif arg.nil? && !block_given? && !empty?
       my_each { |a| return false if a.nil? || a == false }
     elsif (arg.class != Class || arg.class != Regexp) && !arg.nil?
-      my_each { |a| return true unless a != arg}
+      my_each { |a| return true unless a != arg }
     end
     true
   end
